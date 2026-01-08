@@ -57,10 +57,10 @@ class xml_parser:
 
     def run(self):
         # Lijst van alle .xml bestanden in de gegeven dir:
-        xml_files = glob.glob(os.path.join(SOURCE_DIR, "*.xml"))
+        xml_files = glob.glob(os.path.join(self.input_dir, "*.xml"))
         print(f"{len(xml_files)} XML bestanden...")
 
-        with open(OUTPUT_FILE, 'w', encoding='utf-8') as out_f:
+        with open(self.output_dir, 'w', encoding='utf-8') as out_f:
             
             count = 0
             # tqdm voor voortgangsbalk:
@@ -73,4 +73,4 @@ class xml_parser:
                     count += 1
 
         print(f"Voltooid...")
-        print(f"{count} Artikelen met deze zoekcriteria opgeslagen in: {OUTPUT_FILE}")
+        print(f"{count} Artikelen met deze zoekcriteria opgeslagen in: {self.output_dir}")
