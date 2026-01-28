@@ -39,16 +39,16 @@ class xml_parser:
 
             # De "fulltext" van het artikel:
             body_tag = soup.find('body')
-            body_text = ""
+            
+            lines = [title_text]
             
             if body_tag:
                 # Geen tabellen etc. 
                 paragraphs = body_tag.find_all('p')
                 
-                # Join paragrafen:
-                body_text = " ".join([p.get_text(strip=True) for p in paragraphs])
+                lines.extend([p.get_text(strip=True) for p in paragraphs])
 
-            return f"{title_text}. {body_text}"
+            return lines
 
         except Exception as e:
             print(f"Error {self.input_dir}: {e}")
@@ -65,11 +65,13 @@ class xml_parser:
             count = 0
             # tqdm voor voortgangsbalk:
             for file_path in tqdm(xml_files):
-                article_text = self.parse_pmc_xml(file_path)
+                article_lines = self.parse_pmc_xml(file_path)
                 
-                if article_text:
-                    # Schrijf per regel een artikel:
-                    out_f.write(article_text + "\n")
+                if article_lines:
+                    for line in article_lines:
+                        if line: 
+                            out_f.write(line + "\n")
+                    
                     count += 1
 
         print(f"Voltooid...")
