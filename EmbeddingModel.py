@@ -9,11 +9,12 @@ import io
 import re
 import string
 import tqdm
-
+import random
 import tensorflow as tf
 import tensorflow_text as tf_text
 import tensorflow as tf
 from tensorflow.keras import layers
+
 
 AUTOTUNE = tf.data.AUTOTUNE
 SEED = 0
@@ -32,7 +33,7 @@ class EmbeddingModel:
         self.dataset = None
         self.w2v_model = None
 
-    def custom_standardization(input_data):
+    def standardization(input_data):
         lowercase = tf.strings.lower(input_data)
         return tf.strings.regex_replace(lowercase,
                                         '[%s]' % re.escape(string.punctuation), '')
@@ -44,7 +45,7 @@ class EmbeddingModel:
 
     def create_vocab(self):
         self.vectorize_layer = layers.TextVectorization(
-            standardize=self.custom_standardization,
+            standardize=self.standardization,
             max_tokens=self.vocab_size,
             output_mode='int',
             output_sequence_length=self.sequence_length
@@ -148,7 +149,7 @@ class EmbeddingModel:
     def fit(self, epochs=13, log_dir="logs"):
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
 
-        self.w2v_model.compile(optimizer='adam',loss=self.loss_function, metrics=['accuracy'])
+        self.w2v_model.compile(optimizer='adam',loss=self.loss_functionloss_function, metrics=['accuracy'])
 
         self.w2v_model.fit(self.dataset, epochs=epochs, callbacks=[tensorboard_callback])
 
